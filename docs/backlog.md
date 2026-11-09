@@ -1,6 +1,6 @@
 # Backlog
 
-Status 2026-11-02: v0.2.0 released on `main` (tags v0.1.0, v0.1.1, v0.2.0), deployed as preview with the 60 s cache.
+Status 2026-11-09: 0.2.0 released on `main` (tag `0.2.0`), deployed on a Connect preview with the 60 s cache.
 
 ## Done
 
@@ -19,9 +19,8 @@ Status 2026-11-02: v0.2.0 released on `main` (tags v0.1.0, v0.1.1, v0.2.0), depl
   all findings fixed; coverage follows rule changes through the `ledger` (`[BCC-APPR-8]`). 658 tests, 75 of 77
   requirements traced; `[BCC-CART-10]` (latency) needs the live run. Platform features listed with documentation
   links in `FEATURES.md` and checked for beta labels (`[BCC-DEPLOY-7]`).
-- Stage 0 on Connect (2026-10-31 to 2026-11-01): repository pushed (private) to
-  github.com/commercetools-demo/budgets-cost-centers; Connect validation (download, verify, build, SCA, SAST) passes
-  from `v0.1.0-preview.3`; the Connect build check (`tools/connect-build-check.mjs`, `[BCC-DEPLOY-10]`) covers the
+- Stage 0 on Connect (2026-10-31 to 2026-11-01): Connect validation (download, verify, build, SCA, SAST) passes
+  from the first preview tag; the Connect build check (`tools/connect-build-check.mjs`, `[BCC-DEPLOY-10]`) covers the
   findings (common modules with dev dependencies, lock files in sync, no critical advisory, self-contained view,
   classic JSX runtime). Preview Deployment `bcc-preview` in the sandbox, Custom View registered and installed.
 - Live on the preview Deployment (2026-11-01): the platform calls the Extension; cart update p50 182 ms, p95 220 ms
@@ -30,7 +29,7 @@ Status 2026-11-02: v0.2.0 released on `main` (tags v0.1.0, v0.1.1, v0.2.0), depl
   recurring carts get a snapshot through the cart Create Extension and an "order now" order passes the guard; Order
   Import does not call the Extension; the Approval Rule evaluates the cart customer's roles when another associate
   orders the cart. Latency check `tools/e2e/latency.e2e.mjs` (`[BCC-CART-10]`): 200 cart updates, p50 161 ms,
-  p95 233 ms, no failure. Click path on the deployed Custom View (`v0.1.0-preview.5`) with Playwright: cost objects,
+  p95 233 ms, no failure. Click path on the deployed Custom View with Playwright: cost objects,
   budgets with consumption, settings, the Approval Rule check as an associate through the Merchant Center proxy, the
   project overview. 78 requirements, all traced.
 
@@ -63,10 +62,9 @@ Status 2026-11-02: v0.2.0 released on `main` (tags v0.1.0, v0.1.1, v0.2.0), depl
 
 ## Next steps
 
-1. Labs publish. The commercetools org does not accept Robert's account (not a member): IT ticket for access, or
-   Behnam transfers the `commercetools-demo` repository. Prepared in a local handoff note. Then prepare
-   the repository with the `/commercetools-labs-publish` skill and create the local deny list; the Labs team
-   switches it public and opens the docs PR.
+1. Labs publish: the Labs team switches the repository to public and adds the entry to the Labs page of the
+   documentation.
+2. Then by budget: see Optimizations below.
 
 ## Optimizations (by budget)
 
@@ -74,9 +72,9 @@ Measured on the preview Deployment, 200 cart updates each (`npm run e2e:latency`
 
 | Version | p50 | p95 |
 |---|---|---|
-| v0.1.0, sequential reads | 161 ms | 233 ms |
-| v0.1.1, parallel reads `[BCC-CART-12]` (cache off, `BCC_CACHE_SECONDS=0`) | 131 ms | 172 ms |
-| v0.2.0, parallel reads and 60 s cache `[BCC-CART-13]` | 110 ms | 137 ms |
+| 0.1.0, sequential reads | 161 ms | 233 ms |
+| 0.1.1, parallel reads `[BCC-CART-12]` (cache off, `BCC_CACHE_SECONDS=0`) | 131 ms | 172 ms |
+| 0.2.0, parallel reads and 60 s cache `[BCC-CART-13]` | 110 ms | 137 ms |
 
 A cart update without the Extension takes p50 66 ms, so the Extension now adds about 45 ms at the median. Live check of
 the cache (2026-11-02): a budget changed to 1 cent was not seen on the next update, and was seen after 65 s; the
@@ -86,7 +84,7 @@ Later, by budget:
 
 1. Stage 1: precomputed consumption in the ledger instead of live order queries (the remaining live read); design
    target p95 under 100 ms, independent of order volume. Needs its own design section and a migration of the order
-   queries. Today v0.2.0 already meets 137 ms on the seed data; the gain shows with many orders.
+   queries. Today 0.2.0 already meets 137 ms on the seed data; the gain shows with many orders.
 2. Production Deployment: no idle sleep, so no timeout on the first call after a pause. A deployment choice, not code.
 3. Cache invalidation across panel and service (for example by a Subscription on Custom Object changes) if the 60 s
    limit is not acceptable; today `BCC_CACHE_SECONDS=0` turns the cache off.
@@ -129,7 +127,7 @@ Later, by budget:
    `BCC_EXTENSION_SECRET` (random, 32+ characters), `CUSTOM_VIEW_ID`, `CLOUD_IDENTIFIER=gcp-eu`.
 5. Log in yourself when `mc-scripts` or the Playwright browser asks for Merchant Center credentials.
 6. A private repository grants read access to the GitHub user `connect-mu`.
-7. Create the untracked deny list the local deny list (one name per line) for the package check (`[BCC-PKG-4]`);
+7. Create an untracked local deny list (one name per line) for the package check (`[BCC-PKG-4]`);
    without it the name check is skipped with a notice.
 
 ## Sandbox verifications
