@@ -1,0 +1,29 @@
+{
+  "name": "budgets-cost-centers-seed",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Optional fictional reference data for a sandbox project",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "npm --prefix ../core install && npm --prefix ../core run build && npm --prefix ../shared install && npm --prefix ../shared run build && rm -rf build && tsc -p tsconfig.json",
+    "start": "node build/index.js",
+    "test": "jest",
+    "pretest": "npm --prefix ../shared install --no-audit --no-fund"
+  },
+  "dependencies": {
+    "@commercetools/platform-sdk": "^9.7.0",
+    "@commercetools/ts-client": "^5.1.1",
+    "budgets-cost-centers-core": "file:../core",
+    "budgets-cost-centers-shared": "file:../shared"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^22.20.5",
+    "jest": "^30.5.2",
+    "ts-jest": "^29.4.15",
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,0 +1,87 @@
+# Budgets, Cost Centers & Projects: commercetools Labs reference code (MIT, not supported).
+# Each app brings its own API Client with least-privilege scopes (see service/README.md and ledger/README.md);
+# inheritAs.apiClient is not used because it would create one client for the whole connector.
+deployAs:
+  - name: service
+    applicationType: service
+    endpoint: /service
+    scripts:
+      postDeploy: npm install && npm run build && npm run connector:post-deploy
+      preUndeploy: npm install && npm run build && npm run connector:pre-undeploy
+    configuration:
+      standardConfiguration:
+        - key: CTP_PROJECT_KEY
+          description: Project key of the commercetools Project
+          required: true
+        - key: CTP_REGION
+          description: Region of the Project, for example europe-west1.gcp
+          required: true
+        - key: BCC_ORDER_TYPE_KEY
+          description: Key of the Custom Type for carts and orders (created or extended with the bcc fields)
+          default: bcc-order
+        - key: BCC_LINE_ITEM_TYPE_KEY
+          description: Key of the Custom Type for line items
+          default: bcc-line-item
+        - key: BCC_SHOPPING_LIST_TYPE_KEY
+          description: Key of the Custom Type for shopping lists
+          default: bcc-shopping-list
+        - key: BCC_QUOTE_TYPE_KEY
+          description: Key of the Custom Type for quote requests, staged quotes and quotes
+          default: bcc-quote
+        - key: BCC_PROJECT_RETENTION_DAYS
+          description: Days a cart on a project is kept after its last change (1 to 365250)
+          default: '365'
+        - key: BCC_CACHE_SECONDS
+          description: Seconds the cart check keeps Business Units, settings, cost objects and budgets (0 to 3600, 0 turns the cache off); panel changes reach carts after at most this delay
+          default: '60'
+      securedConfiguration:
+        - key: CTP_CLIENT_ID
+          description: Client ID of the service API Client
+          required: true
+        - key: CTP_CLIENT_SECRET
+          description: Secret of the service API Client
+          required: true
+        - key: CTP_SCOPE
+          description: view_orders view_quotes view_business_units view_key_value_documents view_types manage_types manage_extensions, each as <scope>:<projectKey>
+          required: true
+        - key: BCC_EXTENSION_SECRET
+          description: Shared secret for the Extension Authorization header, at least 32 characters
+          required: true
+  - name: ledger
+    applicationType: event
+    endpoint: /ledger
+    scripts:
+      postDeploy: npm install && npm run build && npm run connector:post-deploy
+      preUndeploy: npm install && npm run build && npm run connector:pre-undeploy
+    configuration:
+      standardConfiguration:
+        - key: CTP_PROJECT_KEY
+          description: Project key of the commercetools Project
+          required: true
+        - key: CTP_REGION
+          description: Region of the Project, for example europe-west1.gcp
+          required: true
+        - key: BCC_ORDER_TYPE_KEY
+          description: Key of the Custom Type for carts and orders, same value as for the service
+          default: bcc-order
+      securedConfiguration:
+        - key: CTP_CLIENT_ID
+          description: Client ID of the ledger API Client
+          required: true
+        - key: CTP_CLIENT_SECRET
+          description: Secret of the ledger API Client
+          required: true
+        - key: CTP_SCOPE
+          description: manage_orders view_types view_messages manage_key_value_documents manage_subscriptions, each as <scope>:<projectKey>
+          required: true
+  # The Custom View runs in the user's Merchant Center session; Connect provides APPLICATION_URL.
+  - name: budget-view
+    applicationType: merchant-center-custom-view
+    configuration:
+      standardConfiguration:
+        - key: CUSTOM_VIEW_ID
+          description: ID of the Custom View registered in the Merchant Center
+          required: true
+        - key: CLOUD_IDENTIFIER
+          description: Cloud identifier of the Project's region, for example gcp-eu
+          default: gcp-eu

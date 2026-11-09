@@ -1,0 +1,46 @@
+schema: spec-driven
+
+# The commercetools-spec-extension overlay (skill commercetools-spec-driven-development) appends its own
+# top-level `context:` and `rules:` keys, which would duplicate the keys below. Its content is merged here by
+# hand. Do not re-run the overlay `init` on this file; compare with `setup.mjs status` instead.
+
+context: |
+  Language: English. All artifacts are written in English. Keep OpenSpec structural headings and SHALL/MUST
+  keywords in English.
+
+  Project: "Budgets, Cost Centers & Projects", commercetools Labs reference code (MIT, not supported). Cost
+  objects (cost centers, projects, sites), budgets per cost object or Business Unit and period, and spend limits
+  per Associate Role or associate, enforced by a cart API Extension and routed through a native Approval Rule on
+  `custom.bccBudgetExceeded = true`. docs/design.md is the agreed design; docs/backlog.md holds the current state.
+  Own entities are Custom Objects (`bcc-cost-objects`, `bcc-budgets`, `bcc-settings`); Custom Fields only on
+  transactions (reference and snapshot). Every name in Custom Types, containers and keys carries the prefix `bcc`.
+
+  Requirement IDs: every requirement carries an ID per capability, for example `[BCC-COST-1]`,
+  `[BCC-BUDGET-3]`. Code and tests cite the IDs; the trace check must stay green. A behaviour change updates the
+  spec in the same commit.
+
+  Public repository: no customer, prospect, analyst or competitor names, no deal information. Demo data is
+  invented and labelled as fictional. UI text is English with i18n message files. Platform facts are verified
+  against commercetools documentation and linked; assumptions are labelled as assumptions.
+
+  commercetools platform skills (merged from the commercetools-spec-extension overlay): any proposal, spec,
+  design, task or implementation that touches commercetools (its APIs, SDKs, storefronts, Merchant Center apps,
+  Connect applications, or the Checkout) must first load the matching `commercetools-*` skill. Consult the
+  available `commercetools-*` skills while proposing and while writing tasks. Ground endpoints, GraphQL fields
+  and update actions in the loaded skill, then confirm them with the `commercetools-knowledge` MCP:
+  `commercetools-graphql-validate` for queries and mutations, `commercetools-rest-validate` for REST calls, and
+  `commercetools-graphql-schemata` or `commercetools-oas-schemata` to look up fields and types. When proposing a
+  change against existing code, first survey existing platform usage (SDK clients, API calls, Connect apps,
+  Merchant Center customizations).
+
+rules:
+  proposal:
+    - "If the change touches commercetools, review the available `commercetools-*` skills before writing this proposal; first survey current commercetools usage in this repository and record it under \"What Changes\" and \"Impact\"."
+    - "State what is out of scope."
+  specs:
+    - "Every requirement carries a capability-scoped ID such as `[BCC-COST-1]`; IDs are never reused or renumbered."
+    - "Name platform facts with a documentation link; label assumptions as assumptions and simulated values as simulated."
+  tasks:
+    - "Every task that touches commercetools must carry a `[SKILL: <name>]` annotation at the end of its description, resolved by choosing the matching `commercetools-*` skill (e.g. `- [ ] 1.1 Register cart extension [SKILL: commercetools-connect]`)."
+    - "Before implementing a task that carries a `[SKILL: <name>]` annotation, load that skill first."
+    - "Write the failing test first; a task is done only when its tests and, for visible behaviour, the Playwright click path pass."

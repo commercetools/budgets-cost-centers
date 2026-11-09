@@ -1,0 +1,16 @@
+{
+  "extends": "@commercetools-frontend/application-config/tsconfig-mc-app.json",
+  "compilerOptions": {
+    "typeRoots": ["node_modules/@types"],
+    // Allow tsc to resolve dependencies of `@types` packages in the way pnpm sets up the `node_modules`.
+    "preserveSymlinks": false,
+    // Several MC and Chakra declaration files do not type-check against each other; app code is checked in full.
+    "skipLibCheck": true,
+    // Lets the config test import custom-view-config.mjs with its JSDoc type.
+    "allowJs": true,
+    // Connect builds the view with the classic JSX runtime, so React must be in scope in every JSX file.
+    "jsx": "react",
+    "jsxImportSource": null
+  },
+  "include": ["src", "tests", "jest.d.ts"]
+}

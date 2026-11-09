@@ -1,0 +1,13 @@
+{
+  "name": "budgets-cost-centers",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "npm --prefix budget-view run typecheck && npm --prefix budget-view run lint && npm --prefix core test && npm --prefix service test && npm --prefix ledger test && npm --prefix seed test && npm --prefix budget-view test && node --test tools/trace.test.mjs tools/package-check.test.mjs tools/run-local.test.mjs tools/connect-build-check.test.mjs tools/e2e/latency.e2e.test.mjs && node tools/trace.mjs --check && node tools/package-check.mjs && node tools/connect-build-check.mjs",
+    "trace": "node tools/trace.mjs",
+    "trace:strict": "node tools/trace.mjs --strict",
+    "check": "node tools/package-check.mjs",
+    "check:build": "node tools/connect-build-check.mjs",
+    "e2e:latency": "node tools/e2e/latency.e2e.mjs"
+  }
+}

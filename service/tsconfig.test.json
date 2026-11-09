@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "..",
+    "baseUrl": ".",
+    "paths": {
+      "budgets-cost-centers-core": ["../core/src"],
+      "budgets-cost-centers-shared": ["../shared/src"]
+    }
+  },
+  "include": ["src", "tests", "../core/src", "../shared/src"]
+}

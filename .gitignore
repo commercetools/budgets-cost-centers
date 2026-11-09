@@ -1,0 +1,11 @@
+_intern/
+.env
+node_modules/
+.DS_Store
+.env.*
+!.env.example
+.claude/settings.local.json
+.superpowers/
+
+# Playwright MCP snapshots and logs (may hold session data)
+.playwright-mcp/

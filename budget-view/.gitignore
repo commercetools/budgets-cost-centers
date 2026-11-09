@@ -1,0 +1,5 @@
+node_modules
+# mc-scripts build output (public/ holds only generated files) and compiled HTML
+public
+dist
+.env.local
